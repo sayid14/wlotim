@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:wlotim/features/splash/presentation/pages/presentation_page.dart';
+import 'package:wlotim/features/splash/presentation/pages/splash_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,6 +17,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: SpalashPage());
+        home: const SpalashPage());
   }
 }

@@ -16,13 +16,13 @@ class _SpalashPageState extends State<SpalashPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Timer.periodic(
-      Duration(seconds: 3),
-      (timer) {
+    Timer(
+      const Duration(seconds: 3),
+      () {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) => LoginPage(),
+              builder: (context) => const LoginPage(),
             ),
             (route) => true);
       },

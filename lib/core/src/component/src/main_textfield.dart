@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class MainTextField extends StatelessWidget {
-  const MainTextField({super.key});
-
+  const MainTextField({
+    Key? key,
+    this.hint,
+    this.label,
+    this.prefix,
+  }) : super(key: key);
+  final String? hint;
+  final String? label;
+  final Widget? prefix;
   @override
   Widget build(BuildContext context) {
     return TextField(
-      decoration:
-          InputDecoration(hintText: "Username", prefixIcon: Icon(Icons.person)),
+      decoration: InputDecoration(
+          hintText: hint,
+          label: label == null ? null : Text(label!),
+          prefixIcon: prefix),
     );
   }
 }

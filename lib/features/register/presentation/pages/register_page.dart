@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wlotim/core/core.dart';
 import 'package:wlotim/features/beranda/presentation/pages/beranda_page.dart';
+import 'package:wlotim/features/login/presentation/pages/login_page.dart';
 
-import '../../../register/presentation/pages/register_page.dart';
-
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatelessWidget {
+  const RegisterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class LoginPage extends StatelessWidget {
                 height: 40,
               ),
               Text(
-                "LOGIN",
+                "Register",
                 style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: MediaQuery.of(context).size.width * .08),
@@ -48,6 +47,14 @@ class LoginPage extends StatelessWidget {
                 prefix: Icon(Icons.key),
               ),
               const SizedBox(
+                height: 20,
+              ),
+              const MainTextField(
+                label: "Ulangi Password",
+                hint: "Masukan Ulang password",
+                prefix: Icon(Icons.key),
+              ),
+              const SizedBox(
                 height: 30,
               ),
               SizedBox(
@@ -65,7 +72,7 @@ class LoginPage extends StatelessWidget {
                         backgroundColor:
                             MaterialStateProperty.all(Colors.grey[400])),
                     child: const Text(
-                      "Masuk",
+                      "Daftar",
                       style: TextStyle(fontWeight: FontWeight.w400),
                     )),
               ),
@@ -75,16 +82,16 @@ class LoginPage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Belum punya akun ? "),
+                  const Text("Sudah punya akun ? "),
                   InkWell(
                     onTap: () => Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const RegisterPage(),
+                          builder: (context) => const LoginPage(),
                         ),
                         (route) => true),
                     child: const Text(
-                      "Daftar",
+                      "Masuk",
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                   ),
