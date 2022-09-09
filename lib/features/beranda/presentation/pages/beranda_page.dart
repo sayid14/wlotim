@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wlotim/features/beranda/presentation/widgets/menutiles.dart';
 import 'package:wlotim/features/maps_wisata/presentation/pages/maps_wisata_page.dart';
+import 'package:wlotim/features/profil/presentation/pages/profil_page.dart';
 import 'package:wlotim/features/wisata/presentation/pages/wisata_page.dart';
 
 class BerandaPage extends StatefulWidget {
@@ -30,7 +31,7 @@ class _BerandaPageState extends State<BerandaPage> {
     {
       "title": "Profil",
       "image": "assets/user.png",
-      "page": null,
+      "page": const ProfilPage(),
     },
   ];
   @override

@@ -147,7 +147,7 @@ class DefaultDialog<T> extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
-              mainAxisSize: MainAxisSize.max,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Align(
                     alignment: Alignment.centerRight,
@@ -158,7 +158,7 @@ class DefaultDialog<T> extends StatelessWidget {
                   Icon(
                     icon,
                     color: color ?? Colors.green,
-                    size: MediaQuery.of(context).size.width * 14.16,
+                    size: MediaQuery.of(context).size.width * 0.14,
                   ),
                 if (icon != null)
                   const SizedBox(
@@ -187,10 +187,15 @@ class DefaultDialog<T> extends StatelessWidget {
                     height: 16,
                   ),
                 if (buttonLabel != null)
-                  ElevatedButton(
-                    onPressed: onPressed ?? () => Navigator.pop(context),
-                    child: Text(buttonLabel!),
-                  )
+                  InkWell(
+                    onTap: () => onPressed ?? () => Navigator.pop(context),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(buttonLabel!),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

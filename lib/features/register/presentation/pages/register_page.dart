@@ -1,11 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wlotim/core/core.dart';
 import 'package:wlotim/features/beranda/presentation/pages/beranda_page.dart';
 import 'package:wlotim/features/login/presentation/pages/login_page.dart';
 
 class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
-
+  RegisterPage({super.key});
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool isLooadingAuth = false;
+  final emailCon = TextEditingController();
+  final passCon = TextEditingController();
+  final rePassCon = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,49 +38,94 @@ class RegisterPage extends StatelessWidget {
               const SizedBox(
                 height: 25,
               ),
-              const MainTextField(
+              MainTextField(
+                controller: emailCon,
                 label: "Email",
                 hint: "Masukan email",
-                prefix: Icon(Icons.email),
+                prefix: const Icon(Icons.email),
               ),
               const SizedBox(
                 height: 20,
               ),
-              const MainTextField(
+              MainTextField(
+                controller: passCon,
                 label: "Password",
                 hint: "Masukan password",
-                prefix: Icon(Icons.key),
+                prefix: const Icon(Icons.key),
               ),
               const SizedBox(
                 height: 20,
               ),
-              const MainTextField(
+              MainTextField(
+                controller: rePassCon,
                 label: "Ulangi Password",
                 hint: "Masukan Ulang password",
-                prefix: Icon(Icons.key),
+                prefix: const Icon(Icons.key),
               ),
               const SizedBox(
                 height: 30,
               ),
-              SizedBox(
-                width: double.maxFinite,
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const BerandaPage(),
-                          ),
-                          (route) => true);
-                    },
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.grey[400])),
-                    child: const Text(
-                      "Daftar",
-                      style: TextStyle(fontWeight: FontWeight.w400),
-                    )),
-              ),
+              StatefulBuilder(builder: (context, state) {
+                if (isLooadingAuth) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return SizedBox(
+                  width: double.maxFinite,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        if (passCon.text.isEmpty || rePassCon.text.isEmpty) {
+                          return;
+                        }
+                        if (passCon.text != rePassCon.text) {
+                          DefaultDialog(
+                            title: "Maaf",
+                            content: "password tidak match",
+                          ).showError(context);
+                          return;
+                        }
+                        state.call(
+                          () {
+                            isLooadingAuth = true;
+                          },
+                        );
+                        try {
+                          _auth.createUserWithEmailAndPassword(
+                              email: emailCon.text, password: passCon.text);
+                          DefaultDialog(
+                            title: "Sukses",
+                            content: "Berhasil daftar akun",
+                            autoCloseDuration: const Duration(seconds: 3),
+                          )
+                              .showSuccess(context)
+                              .then((value) => Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LoginPage(),
+                                  ),
+                                  (route) => true));
+                        } catch (e) {
+                          DefaultDialog(
+                            title: "error",
+                            content: e.toString(),
+                          ).showError(context);
+                        }
+                        state.call(
+                          () {
+                            isLooadingAuth = false;
+                          },
+                        );
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.grey[400])),
+                      child: const Text(
+                        "Daftar",
+                        style: TextStyle(fontWeight: FontWeight.w400),
+                      )),
+                );
+              }),
               const SizedBox(
                 height: 10,
               ),
@@ -84,12 +134,7 @@ class RegisterPage extends StatelessWidget {
                 children: [
                   const Text("Sudah punya akun ? "),
                   InkWell(
-                    onTap: () => Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                        (route) => true),
+                    onTap: () {},
                     child: const Text(
                       "Masuk",
                       style: TextStyle(fontWeight: FontWeight.w500),
