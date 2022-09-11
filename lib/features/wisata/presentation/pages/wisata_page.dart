@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:wlotim/core/core.dart';
 
 import '../widgets/wisata_tiles.dart';
 
@@ -14,24 +16,34 @@ class WisataPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 8.0),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Wrap(
-              runSpacing: 8,
-              spacing: 8,
-              children: List.generate(
-                  10,
-                  (index) => const WisataTiles(
-                        data: {
-                          "title": "Gunung Rinjani",
-                          "category": "Gunung",
-                          "image": "assets/rinjani.jpg"
-                        },
-                      )),
-            ),
-          ),
-        ),
+        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            stream: FirebaseFirestore.instance
+                .collection(FirestoreConst.wisata)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.hasData) {
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Wrap(
+                      runSpacing: 8,
+                      spacing: 8,
+                      children: List.generate(
+                          snapshot.data?.docs.length ?? 0,
+                          (index) => WisataTiles(
+                                data: snapshot.data?.docs[index].data(),
+                              )),
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox();
+            }),
       ),
     );
   }

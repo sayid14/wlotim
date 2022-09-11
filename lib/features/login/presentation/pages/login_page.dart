@@ -1,9 +1,12 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wlotim/core/core.dart';
 import 'package:wlotim/features/beranda/presentation/pages/beranda_page.dart';
+import 'package:wlotim/features/beranda_admin/presentation/pages/beranda_admin_page.dart';
 
 import '../../../register/presentation/pages/register_page.dart';
 
@@ -76,6 +79,13 @@ class LoginPage extends StatelessWidget {
                         try {
                           final res = await _auth.signInWithEmailAndPassword(
                               email: emailCon.text, password: passCon.text);
+                          final data = await FirebaseFirestore.instance
+                              .collection(FirestoreConst.profile)
+                              .doc(res.user?.uid)
+                              .get();
+                          final pref = await SharedPreferences.getInstance();
+                          pref.setInt(SharedPrefrencesConst.userType,
+                              data.data()?["type"] ?? 0);
                           DefaultDialog(
                             title: "Sukses",
                             content: "Login Berhasil",
@@ -84,7 +94,10 @@ class LoginPage extends StatelessWidget {
                             Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const BerandaPage(),
+                                  builder: (context) =>
+                                      data.data()?["type"] == 1
+                                          ? const BerandaPage()
+                                          : const BerandaAdminPage(),
                                 ),
                                 (route) => true);
                           });

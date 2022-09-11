@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:wlotim/features/maps_wisata/presentation/pages/maps_wisata_page.dart';
 import 'package:wlotim/features/profil/presentation/pages/profil_page.dart';
-import 'package:wlotim/features/wisata/presentation/pages/wisata_page.dart';
+import 'package:wlotim/features/wisata_admin/presentation/pages/wisata_admin_page.dart';
 
 import '../widgets/menutiles.dart';
 
-class BerandaPage extends StatefulWidget {
-  const BerandaPage({Key? key}) : super(key: key);
+class BerandaAdminPage extends StatefulWidget {
+  const BerandaAdminPage({Key? key}) : super(key: key);
 
   @override
-  State<BerandaPage> createState() => _BerandaPageState();
+  State<BerandaAdminPage> createState() => _BerandaAdminPageState();
 }
 
-class _BerandaPageState extends State<BerandaPage> {
+class _BerandaAdminPageState extends State<BerandaAdminPage> {
   List<Map<String, dynamic>> data = [
     {
       "title": "Wisata",
       "image": "assets/ic_destination.png",
-      "page": const WisataPage(),
+      "page": WisataAdminPage(),
     },
     {
       "title": "Maps",
@@ -94,7 +94,7 @@ class _BerandaPageState extends State<BerandaPage> {
                                   ),
                                   const Expanded(
                                     child: Text(
-                                      "Wisata Lombok Timur",
+                                      "Admin",
                                       // maxLines: 1,
                                       style: TextStyle(
                                           fontSize: 20,

@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wlotim/core/core.dart';
-import 'package:wlotim/features/beranda/presentation/pages/beranda_page.dart';
 import 'package:wlotim/features/login/presentation/pages/login_page.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -74,7 +74,7 @@ class RegisterPage extends StatelessWidget {
                 return SizedBox(
                   width: double.maxFinite,
                   child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (passCon.text.isEmpty || rePassCon.text.isEmpty) {
                           return;
                         }
@@ -91,8 +91,15 @@ class RegisterPage extends StatelessWidget {
                           },
                         );
                         try {
-                          _auth.createUserWithEmailAndPassword(
-                              email: emailCon.text, password: passCon.text);
+                          final res =
+                              await _auth.createUserWithEmailAndPassword(
+                                  email: emailCon.text, password: passCon.text);
+                          await FirebaseFirestore.instance
+                              .collection(FirestoreConst.profile)
+                              .doc(res.user?.uid)
+                              .set({
+                            "type": 1,
+                          });
                           DefaultDialog(
                             title: "Sukses",
                             content: "Berhasil daftar akun",

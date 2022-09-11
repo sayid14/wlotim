@@ -1,42 +1,18 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:wlotim/core/core.dart';
 import 'package:wlotim/core/src/utils/src/location/location_util.dart';
 
-import '../../../../core/src/constants/src/firestore.dart';
-
-class MapsWisataPage extends StatefulWidget {
-  const MapsWisataPage({Key? key}) : super(key: key);
+class PilihLokasiWisataPage extends StatefulWidget {
+  const PilihLokasiWisataPage({Key? key}) : super(key: key);
 
   @override
-  State<MapsWisataPage> createState() => _MapsWisataPageState();
+  State<PilihLokasiWisataPage> createState() => _PilihLokasiWisataPageState();
 }
 
-class _MapsWisataPageState extends State<MapsWisataPage> {
-  List<Map<String, dynamic>> wisataList = [
-    {
-      "nama": "Air Terjun Jeruk Manis",
-      "lat": -8.515177019190377,
-      "lng": 116.42404485424161
-    },
-    {
-      "nama": "Jobong Waterpark",
-      "lat": -8.672176982650509,
-      "lng": 116.5458050254076
-    },
-    {
-      "nama": "Labuhan Haji",
-      "lat": -8.674918035472919,
-      "lng": 116.57200956466451
-    },
-    {
-      "nama": "Pantai Lungkak",
-      "lat": -8.789548751123133,
-      "lng": 116.50457965424503
-    },
-  ];
+class _PilihLokasiWisataPageState extends State<PilihLokasiWisataPage> {
   CameraPosition initLocation = const CameraPosition(
     target: LatLng(-6.175275063136812, 106.82713133887096),
     zoom: 14.4746,
@@ -51,24 +27,20 @@ class _MapsWisataPageState extends State<MapsWisataPage> {
         CameraUpdate.newLatLng(LatLng(location.latitude, location.longitude)));
   }
 
-  void addWisataMarker(void Function(void Function()) state) async {
-    final data = await FirebaseFirestore.instance
-        .collection(FirestoreConst.wisata)
-        .get();
-    for (var wisata in data.docs) {
-      markers.add(
-        Marker(
-          markerId: MarkerId(wisata["nama"]),
-          position: LatLng(wisata["lat"], wisata["lng"]),
-          infoWindow: InfoWindow(
-            title: wisata["nama"],
-          ),
+  void addWisataMarker(LatLng position) {
+    markers.clear();
+    markers.add(
+      Marker(
+        markerId: const MarkerId("Wisata"),
+        position: position,
+        infoWindow: const InfoWindow(
+          title: "Wisata",
         ),
-      );
-    }
-    state.call(
-      () {},
+      ),
     );
+    if (mapsController != null) {
+      mapsController!.animateCamera(CameraUpdate.newLatLng(position));
+    }
   }
 
   @override
@@ -85,6 +57,12 @@ class _MapsWisataPageState extends State<MapsWisataPage> {
             myLocationEnabled: true,
             myLocationButtonEnabled: true,
             mapToolbarEnabled: true,
+            onTap: (argument) {
+              addWisataMarker(argument);
+              state.call(
+                () {},
+              );
+            },
             onMapCreated: (GoogleMapController controller) async {
               if (mapsCompleter.isCompleted) {
                 mapsCompleter.complete(controller);
@@ -93,10 +71,29 @@ class _MapsWisataPageState extends State<MapsWisataPage> {
                 mapsController = controller;
               }
               await toCurrentLocation(context);
-              addWisataMarker(state);
             },
           );
         }),
+      ),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+              width: MediaQuery.of(context).size.width * .9,
+              child: ElevatedButton(
+                  onPressed: () {
+                    if (markers.isEmpty) {
+                      DefaultDialog(
+                        autoCloseDuration: const Duration(seconds: 3),
+                        title: "Invalid",
+                        content: "Anda belum memilih lokasi wisata",
+                      ).showWarning(context);
+                      return;
+                    }
+                    Navigator.pop(context, markers.first.position);
+                  },
+                  child: const Text("Konfirmasi")))
+        ],
       ),
     );
   }

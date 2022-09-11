@@ -1,9 +1,11 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wlotim/core/core.dart';
 import 'package:wlotim/features/beranda/presentation/pages/beranda_page.dart';
+import 'package:wlotim/features/beranda_admin/presentation/pages/beranda_admin_page.dart';
 
 import '../../../login/presentation/pages/login_page.dart';
 
@@ -23,13 +25,25 @@ class _SpalashPageState extends State<SpalashPage> {
     Timer(
       const Duration(seconds: 3),
       () async {
+        final pref = await SharedPreferences.getInstance();
+
         if (_auth.currentUser != null) {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const BerandaPage(),
-              ),
-              (route) => true);
+          if (pref.getInt(SharedPrefrencesConst.userType) == 0) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const BerandaAdminPage(),
+                ),
+                (route) => true);
+            return;
+          } else {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const BerandaPage(),
+                ),
+                (route) => true);
+          }
           return;
         }
         Navigator.pushAndRemoveUntil(
