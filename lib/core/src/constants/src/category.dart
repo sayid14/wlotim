@@ -1,3 +1,3 @@
 class CategoryConst {
-  static const List<String> categoryList = ["Alam", "Laut", "Budaya"];
+  static const List<String> categoryList = ["Alam", "Pantai", "Budaya"];
 }

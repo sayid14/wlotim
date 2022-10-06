@@ -141,7 +141,12 @@ class RegisterPage extends StatelessWidget {
                 children: [
                   const Text("Sudah punya akun ? "),
                   InkWell(
-                    onTap: () {},
+                    onTap: () => Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ),
+                        (route) => true),
                     child: const Text(
                       "Masuk",
                       style: TextStyle(fontWeight: FontWeight.w500),

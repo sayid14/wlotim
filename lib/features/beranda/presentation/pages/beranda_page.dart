@@ -25,11 +25,6 @@ class _BerandaPageState extends State<BerandaPage> {
       "page": const MapsWisataPage(),
     },
     {
-      "title": "Berita",
-      "image": "assets/news-report.png",
-      "page": null,
-    },
-    {
       "title": "Profil",
       "image": "assets/user.png",
       "page": const ProfilPage(),

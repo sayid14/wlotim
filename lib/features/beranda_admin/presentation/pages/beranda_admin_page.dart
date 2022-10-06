@@ -20,17 +20,7 @@ class _BerandaAdminPageState extends State<BerandaAdminPage> {
       "page": WisataAdminPage(),
     },
     {
-      "title": "Maps",
-      "image": "assets/map.png",
-      "page": const MapsWisataPage(),
-    },
-    {
-      "title": "Berita",
-      "image": "assets/news-report.png",
-      "page": null,
-    },
-    {
-      "title": "Profil",
+      "title": "Logout",
       "image": "assets/user.png",
       "page": const ProfilPage(),
     },
